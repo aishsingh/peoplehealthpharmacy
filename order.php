@@ -1,5 +1,5 @@
 <?php 
-	//customer
+	// order
     require_once ("settings.php");
  
     $conn = @mysqli_connect($mysql_host,
@@ -17,16 +17,16 @@
     {
         echo "<p>Connected to the database <b>$sql_db</b></p>";
 
-	echo"<title>Customer</title>";
+	echo"<title>Order</title>";
 	echo"<h1>People Health Pharmacy Sales Reporting System</h1>";
-	echo '<li><a href="index.php" target="_blank">'. $post['message']. '<b>Customer</b></a></li>';
-	echo '<li><a href="order.php" target="_blank">'. $post['message']. 'Order</a></li>';
+	echo '<li><a href="index.php" target="_blank">'. $post['message']. 'Customer</a></li>';
+	echo '<li><a href="order.php" target="_blank">'. $post['message']. '<b>Order</b></a></li>';
 	echo '<li><a href="product.php" target="_blank">'. $post['message']. 'Product</a></li>';
 	echo '<li><a href="sale.php" target="_blank">'. $post['message']. 'Sale</a></li>';
  
-	echo"<h2>Customer Database</h2>";
+	echo"<h2>Order Database</h2>";
 	
-	$sql = 'SELECT cid, cname, cgender, cage, cphone FROM CUSTOMER';
+	$sql = 'SELECT oid, pid, oquantity FROM ORDER';
 	
 	$result = mysqli_query($conn, $sql);
 
@@ -37,11 +37,9 @@
     	{
     	
     		
-   		echo "Customer ID :{$row["cid"]}  <br> ".
-         	"Customer Name: {$row["cname"]} <br> ".
-         	"Customer Gender: {$row["cgender"]} <br> ".
-	        "Customer Age: {$row["cage"]} <br> ".
-         	"Customer Phone: {$row["cphone"]} <br> ".
+   		echo "Order ID :{$row["oid"]}  <br> ".
+         	"Product ID: {$row["pid"]} <br> ".
+         	"Order Quantity: {$row["oquantity"]} <br> ".
          	"------------------<br>";
     	
 	}
