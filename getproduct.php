@@ -24,8 +24,10 @@
             while($row = mysqli_fetch_assoc($result)) 
             {
                 echo $row["pname"] . ",".
+                     $row["pdesc"] . ",".
+                     $row["pwholesale"] . ",".
                      $row["pselling"] . ",".
-                     $row["pstock"] . ",";
+                     $row["pstock"];
             }
         }
     }

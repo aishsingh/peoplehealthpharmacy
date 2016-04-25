@@ -39,23 +39,57 @@
             function selectProduct(form) {
               var div = document.getElementById("result");
 
-              var http = new XMLHttpRequest();
-              http.open("POST", "verifyproduct.php", true);
-              http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-              var params = "pid=" + form.product.value;
-              http.send(params);
-              http.onload = function() {
-                var response = http.responseText;
+              // Product setup
+              var phttp = new XMLHttpRequest();
+              phttp.open("POST", "getproduct.php", true);
+              phttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+              var pparams = "pid=" + form.product.value;
+              phttp.send(pparams);
+              phttp.onload = function() {
+                var response = phttp.responseText;
 
                 if (response.length > 0) {
                   var res = response.split(",");
                   var name = res[0]; 
-                  var price = res[1]; 
+                  var price = res[3]; 
+                  var available = Number(res[4]);
 
-                  div.innerHTML = div.innerHTML + "<tr><td>" + form.product.value + "</td><td>" + name + "</td><td>" + form.quantity.value + "</td><td>" + price + `</td><td><button onclick="deleteRow(this)">-</button></td></tr>`;
-                  updateTotal();
-                } else {
+                  if (available >= form.quantity.value) {
+                    div.innerHTML = div.innerHTML + "<tr><td>" + form.product.value + "</td><td>" + name + "</td><td>" + form.quantity.value + "</td><td>" + price + `</td><td><button onclick="deleteRow(this)">-</button></td></tr>`;
+                    updateTotal();
+                  }
+                  else {
+                    alert("Only " + available + " " + name + " currently in stock");
+                    result;
+                  }
+                } 
+                else {
                   alert("Product (" + form.product.value + ") doesnt exist!");
+                  result;
+                }
+              }
+
+              // Customer setup
+              var chttp = new XMLHttpRequest();
+              chttp.open("POST", "getcustomer.php", true);
+              chttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+              cparams = "cid=" + form.customer.value;
+              chttp.send(cparams);
+              chttp.onload = function() {
+                var response = chttp.responseText;
+
+                if (response.length > 0) {
+                  var res = response.split(",");
+                  var name = res[0]; 
+                  var discount = Number(res[4]); 
+
+                  if (discount > 0) {
+                    document.getElementById("discount").value = (discount * 100);
+                    updateDiscount();
+                  }
+                } 
+                else {
+                  alert("Product (" + form.customer.value + ") doesnt exist!");
                 }
               }
               
@@ -69,14 +103,22 @@
               updateTotal();
             }
 
+            var total = Number(0);
             function updateTotal() {
-              var div = document.getElementById("result");
-              var total = Number(0);
-              for(var i=1; i<div.rows.length;i++) {
-                total += parseFloat(div.rows[i].cells[3].innerHTML) * parseFloat(div.rows[i].cells[2].innerHTML);
+              var result = document.getElementById("result");
+              total = Number(0);
+
+              for(var i=1; i<result.rows.length;i++) {
+                total += parseFloat(result.rows[i].cells[3].innerHTML) * parseFloat(result.rows[i].cells[2].innerHTML);
               }
 
               document.getElementById("total").innerHTML = "Total: $" + total.toFixed(2);
+              updateDiscount();
+            }
+
+            function updateDiscount() {
+              var discount = Number(document.getElementById("discount").value) / 100;
+              document.getElementById("totaldiscount").innerHTML = "After discount: $" + (total - Number(total * discount).toFixed(2));
             }
 
             function clearList() {
@@ -90,7 +132,7 @@
             Product:<br>
             <input type="text" name="product"> <input type="number" name="quantity" value="1" min="1" max="9999999999"> <input type="submit" value="Submit"> <br>
             Customer:<br>
-            <input type="text" name="customer"> <div id="discount">Discount: 0%</div><br>
+            <input type="text" name="customer"> Discount: <input id="discount" type="number" min="0" max="100" value="0" oninput="updateDiscount()">%<br>
           </form><br>';
 
     echo '<table id="result"><tr><th>ID</th><th>Name</th><th>Quantity</th><th>Price</th><th>Remove</th></tr></table><br>';
