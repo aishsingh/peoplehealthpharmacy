@@ -1,6 +1,6 @@
 <?php 
 	// order
-    require_once ("settings.php");
+    require_once ("../settings.php");
  
     $conn = @mysqli_connect($mysql_host,
     $user,
