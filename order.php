@@ -26,7 +26,7 @@
  
 	echo"<h2>Order Database</h2>";
 	
-	$sql = 'SELECT oid, pid, oquantity FROM ORDER';
+	$sql = 'SELECT oid, pid, oquantity FROM `ORDER`';
 	
 	$result = mysqli_query($conn, $sql);
 
