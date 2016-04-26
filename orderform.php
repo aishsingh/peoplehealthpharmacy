@@ -50,31 +50,36 @@
               var product = document.getElementsByName("product")[0].value;
               var quantity = document.getElementsByName("quantity")[0].value;
 
-              var http = new XMLHttpRequest();
-              http.open("POST", "/actions/getproduct.php", true);
-              http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-              var params = "pid=" + product;
-              http.send(params);
-              http.onload = function() {
-                var response = http.responseText;
+              if (product != "") {
+                var http = new XMLHttpRequest();
+                http.open("POST", "/actions/getproduct.php", true);
+                http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                var params = "pid=" + product;
+                http.send(params);
+                http.onload = function() {
+                  var response = http.responseText;
 
-                if (response.length > 0) {
-                  var res = response.split(",");
-                  var name = res[0]; 
-                  var price = res[3]; 
-                  var available = Number(res[4]);
+                  if (response.length > 0) {
+                    var res = response.split(",");
+                    var name = res[0]; 
+                    var price = res[3]; 
+                    var available = Number(res[4]);
 
-                  if (available >= quantity) {
-                    result.innerHTML = result.innerHTML + "<tr><td>" + product + "</td><td>" + name + "</td><td>" + quantity + "</td><td>" + price + `</td><td><button onclick="deleteRow(this)">-</button></td></tr>`;
-                    updateTotal();
-                  }
+                    if (available >= quantity) {
+                      result.innerHTML = result.innerHTML + "<tr><td>" + product + "</td><td>" + name + "</td><td>" + quantity + "</td><td>" + price + `</td><td><button onclick="deleteRow(this)">-</button></td></tr>`;
+                      updateTotal();
+                    }
+                    else {
+                      alert("Only " + available + " " + name + " currently in stock");
+                    }
+                  } 
                   else {
-                    alert("Only " + available + " " + name + " currently in stock");
+                    alert("Product (" + product + ") doesnt exist!");
                   }
-                } 
-                else {
-                  alert("Product (" + product + ") doesnt exist!");
                 }
+              }
+              else {
+                alert("Product id connot be empty!");
               }
             }
 
@@ -143,6 +148,7 @@
               document.getElementById("result").innerHTML = "<tr><th>ID</th><th>Name</th><th>Quantity</th><th>Price</th><th>Remove</th></tr>";
 
               updateTotal();
+              getMaxID();
             }
 
             var receiptModal;
@@ -187,7 +193,7 @@
                            <br>
 
                            <hr>
-                           <div style="text-align: right;"><button onclick="receiptModal.close();">Cancel</button> <button onclick="createSale()">Confirm</button></div>
+                           <div style="text-align: right;"><button onclick="receiptModal.close();">Cancel</button> <button onclick="createSaleOrders()">Confirm</button></div>
                         </div>`;
 
               receiptModal = picoModal({
@@ -220,34 +226,60 @@
 
             }
 
-            function createSale() {
-              // var result = document.getElementById("result");
-              // for(var i=1; i<result.rows.length;i++) {
-              //   var oid = 0;
-              //   var pid = Number(result.rows[i].cells[0].innerHTML);
-              //   var oquantity = parseFloat(result.rows[i].cells[2].innerHTML).toFixed(2);
-              //
-              //   var http = new XMLHttpRequest();
-              //   http.open("POST", "/actions/createOrder.php", true);
-              //   http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-              //   var params = "oid=" + oid + "pid=" + pid + "oquantity=" + oquantity;
-              //   http.send(params);
-              //   http.onload = function() {
-              //     var response = http.responseText;
-              //
-              //     if (response.length > 0) {
-              //       var res = response.split(",");
-              //       cname = res[0]; 
-              //       var discount = Number(res[4]); 
-              //
-              //       document.getElementById("discount").value = (discount * 100);
-              //       updateDiscount();
-              //     } 
-              //     else {
-              //       alert("Customer (" + customer + ") doesnt exist!");
-              //       document.getElementById("discount").value = 0;
-              //     }
-              //   }
+            var salecomplete = false;
+            function createSale(oids) {
+              var sid = max_sid + 1;
+              var cid = document.getElementsByName("customer")[0].value;
+
+              var http = new XMLHttpRequest();
+              http.open("POST", "/actions/createsale.php", true);
+              http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+              var params = "sid=" + sid + "&oid=" + oids.join(" ") + "&cid=" + cid + "&sdiscount=" + discount;
+              http.send(params);
+              http.onload = function() {
+                if (!salecomplete) {
+                  var response = http.responseText;
+
+                  if (response == "done") {
+                    salecomplete = true;
+                    alert("Sale (" + sid + ") successfully created!");
+                    window.location.reload();
+                  } 
+                  else {
+                    alert("Failed to create sale (" + sid + ")! [" + response + "]");
+                  }
+                }
+              }
+            }
+
+            var created_oid = [];
+            function createSaleOrders() {
+              var result = document.getElementById("result");
+
+              // Create Orders first
+              for(var i=1; i<result.rows.length;i++) {
+                var oid = max_oid + Number(i);
+                var pid = Number(result.rows[i].cells[0].innerHTML);
+                var oquantity = parseFloat(result.rows[i].cells[2].innerHTML).toFixed(2);
+
+                var http = new XMLHttpRequest();
+                http.open("POST", "/actions/createorder.php", false);
+                http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                var params = "oid=" + oid + "&pid=" + pid + "&oquantity=" + oquantity;
+                http.send(params);
+
+                var response = http.responseText;
+                if (response == "done") {
+                  created_oid.push(oid);
+                } 
+                else {
+                  alert("Failed to create order (" + oid + ")! [" + response + "]");
+                }
+              }
+
+              if (created_oid.length == (result.rows.length - 1)) {
+                createSale(created_oid);
+              }
             }
           </script>';
 
