@@ -15,27 +15,15 @@
     } 
     else 
     {
-        $sql = 'SELECT MAX(oid) FROM `ORDER`';
+        $sql = 'INSERT INTO `PRODUCT`(`pid`, `pname`, `pdesc`, `pwholesale`, `pselling`, `pstock`) VALUES (' . $_POST["pid"] . ',"' . $_POST["pname"] . '","' . $_POST["pdesc"] . '",' . $_POST["pwholesale"] . ',' . $_POST["pselling"] . ',' . $_POST["pstock"] . ')';
         
         $result = mysqli_query($conn, $sql);
 
         if ($result) {
-            echo mysqli_fetch_row($result)[0];
+            echo 'done';
         }
-
-        $sql = 'SELECT MAX(sid) FROM `SALE`';
-        
-        $result = mysqli_query($conn, $sql);
-
-        if ($result) {
-            echo ',' . mysqli_fetch_row($result)[0];
-        }
-		  $sql = 'SELECT MAX(pid) FROM `PRODUCT`';
-        
-        $result = mysqli_query($conn, $sql);
-
-        if ($result) {
-            echo ',' . mysqli_fetch_row($result)[0];
+        else {
+            echo die(mysqli_error($conn));
         }
     }
 	
