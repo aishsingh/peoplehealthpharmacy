@@ -16,38 +16,58 @@
     else 
     {
         echo "<p>Connected to the database <b>$sql_db</b></p>";
-
+	echo '<link href="styles/style.css" rel="stylesheet" type="text/css"/>';
 	echo"<title>Order</title>";
 	echo"<h1>People Health Pharmacy Sales Reporting System</h1>";
-	echo '<li><a href="index.php" target="_blank">'. $post['message']. 'Customer</a></li>';
-	echo '<li><a href="order.php" target="_blank">'. $post['message']. '<b>Order</b></a></li>';
-	echo '<li><a href="product.php" target="_blank">'. $post['message']. 'Product</a></li>';
-	echo '<li><a href="sale.php" target="_blank">'. $post['message']. 'Sale</a></li>';
+	echo '<nav>
+			<ul>
+				<li><a href="index.php">Customer</a> |
+					<ul>
+						<li><a href="addcustomer.php">Add</a></li>
+						<li><a href="removecustomer.php">Remove</a></li>
+					</ul>
+				</li>
+				<li><a href="order.php">Order</a> |</li>
+				<li><a href="product.php">Product</a> |
+					<ul>
+						<li><a href="addproduct.php">Add</a></li>
+						<li><a href="removeproduct.php">Remove</a></li>
+					</ul>
+				</li>
+				<li><a href="sale.php">Sales</a> |</li>
+				<li><a href="orderform.php">Checkout</a> |</li>
+				<li><a href="report.php">Report</a></li>
+			</ul>
+		  </nav>
+	
+	';
  
 	echo"<h2>Order Database</h2>";
 	
-	$sql = 'SELECT oid, pid, oquantity FROM `ORDER`';
 	
-	$result = mysqli_query($conn, $sql);
+	
+	$sql= "SELECT oid, pid, oquantity FROM `ORDER`";
+	
+	$result = $conn->query($sql);
 
-	if (mysqli_num_rows($result) > 0)
-	{
-  		
-    	while($row = mysqli_fetch_assoc($result)) 
+  	
+  	if ($result->num_rows > 0) 
+  	{
+  	
+    	while($row = $result->fetch_assoc()) 
     	{
     	
+    		echo "Order ID :{$row["oid"]}  <br> "."Product ID: {$row["pid"]} <br> "."Order Quantity: {$row["oquantity"]} <br> "."------------------<br>";
+    	}
     		
-   		echo "Order ID :{$row["oid"]}  <br> ".
-         	"Product ID: {$row["pid"]} <br> ".
-         	"Order Quantity: {$row["oquantity"]} <br> ".
-         	"------------------<br>";
-    	
-	}
-	
+   	}
+	else
+	{
+		echo"database connected but failed to display";
 	}
 	
     }
-    // close the database connection
+
+ // close the database connection
         mysqli_close($conn);
- 
 ?>

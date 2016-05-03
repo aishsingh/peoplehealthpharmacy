@@ -16,13 +16,31 @@
     else 
     {
         echo "<p>Connected to the database <b>$sql_db</b></p>";
-
+	echo '<link href="styles/style.css" rel="stylesheet" type="text/css"/>';
 	echo"<title>Sale</title>";
 	echo"<h1>People Health Pharmacy Sales Reporting System</h1>";
-	echo '<li><a href="index.php" target="_blank">'. $post['message']. 'Customer</a></li>';
-	echo '<li><a href="order.php" target="_blank">'. $post['message']. 'Order</a></li>';
-	echo '<li><a href="product.php" target="_blank">'. $post['message']. 'Product</a></li>';
-	echo '<li><a href="sale.php" target="_blank">'. $post['message']. '<b>Sale</b></a></li>';
+	echo '<nav>
+			<ul>
+				<li><a href="index.php">Customer</a> |
+					<ul>
+						<li><a href="addcustomer.php">Add</a></li>
+						<li><a href="removecustomer.php">Remove</a></li>
+					</ul>
+				</li>
+				<li><a href="order.php">Order</a> |</li>
+				<li><a href="product.php">Product</a> |
+					<ul>
+						<li><a href="addproduct.php">Add</a></li>
+						<li><a href="removeproduct.php">Remove</a></li>
+					</ul>
+				</li>
+				<li><a href="sale.php">Sales</a> |</li>
+				<li><a href="orderform.php">Checkout</a> |</li>
+				<li><a href="report.php">Report</a></li>
+			</ul>
+		  </nav>
+	
+	';
  
 	echo"<h2>Sale Database</h2>";
 	
@@ -39,15 +57,18 @@
     		
    		echo "Sale ID :{$row["sid"]}  <br> ".
          	"Order ID: {$row["oid"]} <br> ".
-			"Customer ID: {$row["cid"]} <br> ".
-			"Sale Discount ID: {$row["sdiscount"]} <br> ".
+		"Customer ID: {$row["cid"]} <br> ".
+		"Sale Discount ID: {$row["sdiscount"]} <br> ".
          	"Sale Date: {$row["sdate"]} <br> ".
          	"------------------<br>";
     	
 	}
 	
 	}
-	
+	else
+	{
+		echo"database connected but failed to display";
+	}
     }
     // close the database connection
         mysqli_close($conn);

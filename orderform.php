@@ -15,13 +15,32 @@
     else 
     {
     echo '<script src="/scripts/picoModal.js"></script>';
-
+	echo '<link href="styles/style.css" rel="stylesheet" type="text/css"/>';
 	echo "<title>Order</title>";
 	echo "<h1>People Health Pharmacy Sales Reporting System</h1>";
-	echo '<li><a href="index.php" target="_blank">'. $post['message']. 'Customer</a></li>';
-	echo '<li><a href="order.php" target="_blank">'. $post['message']. '<b>Order</b></a></li>';
-	echo '<li><a href="product.php" target="_blank">'. $post['message']. 'Product</a></li>';
-	echo '<li><a href="sale.php" target="_blank">'. $post['message']. 'Sale</a></li>';
+
+	echo '<nav>
+			<ul>
+				<li><a href="index.php">Customer</a> |
+					<ul>
+						<li><a href="addcustomer.php">Add</a></li>
+						<li><a href="removecustomer.php">Remove</a></li>
+					</ul>
+				</li>
+				<li><a href="order.php">Order</a> |</li>
+				<li><a href="product.php">Product</a> |
+					<ul>
+						<li><a href="addproduct.php">Add</a></li>
+						<li><a href="removeproduct.php">Remove</a></li>
+					</ul>
+				</li>
+				<li><a href="sale.php">Sales</a> |</li>
+				<li><a href="orderform.php">Checkout</a> |</li>
+				<li><a href="report.php">Report</a></li>
+			</ul>
+		  </nav>
+	
+	';
 
 	echo "<h2>Order Form</h2>";
 
