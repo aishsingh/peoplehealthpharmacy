@@ -15,7 +15,7 @@
     } 
     else 
     {
-        echo "<p>Connected to the database <b>$sql_db</b></p>";
+    echo "<p>Connected to the database <b>$sql_db</b></p>";
 	echo '<link href="styles/style.css" rel="stylesheet" type="text/css"/>';
 	echo"<title>Sale</title>";
 	echo"<h1>People Health Pharmacy Sales Reporting System</h1>";
@@ -50,20 +50,33 @@
 
 	if (mysqli_num_rows($result) > 0)
 	{
-  		
+  		echo '<table border="1">
+			<thead>
+				<tr>
+					<th>Sale ID</th>
+					<th>Order ID</th>
+					<th>Customer ID</th>
+					<th>Discount %</th>
+					<th>Sale Date</th>
+				</tr>
+			</thead>
+			<tbody>';
     	while($row = mysqli_fetch_assoc($result)) 
     	{
     	
-    		
-   		echo "Sale ID :{$row["sid"]}  <br> ".
-         	"Order ID: {$row["oid"]} <br> ".
-		"Customer ID: {$row["cid"]} <br> ".
-		"Sale Discount ID: {$row["sdiscount"]} <br> ".
-         	"Sale Date: {$row["sdate"]} <br> ".
-         	"------------------<br>";
-    	
+			print "<tr> <td>";
+			echo $row["sid"];
+			print "</td> <td>";
+			echo $row["oid"];
+			print "</td> <td>";
+			echo $row["cid"];
+			print "</td> <td>";
+			echo $row["sdiscount"];
+			print "</td> <td>";
+			echo $row["sdate"];
+			print "</td> </tr>";    	
 	}
-	
+	echo '</tbody> </table>';
 	}
 	else
 	{

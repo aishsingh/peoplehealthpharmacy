@@ -42,7 +42,7 @@
 	
 	';
  
-	echo"<h2>Product Database</h2>";
+	echo"<h2>Product Inventory</h2>";
 	
 	$sql = 'SELECT pid, pname, pdesc, pwholesale, pselling, pstock FROM PRODUCT';
 	
@@ -50,21 +50,35 @@
 
 	if (mysqli_num_rows($result) > 0)
 	{
-  		
+  		echo '<table border="1">
+			<thead>
+				<tr>
+					<th>Product ID</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Wholesale ($)</th>
+					<th>Selling ($)</th>
+					<th>Stock</th>
+				</tr>
+			</thead>
+			<tbody>';
     	while($row = mysqli_fetch_assoc($result)) 
     	{
-    	
-    		
-   		echo "Product ID :{$row["pid"]}  <br> ".
-         	"Product Name: {$row["pname"]} <br> ".
-         	"Product Description: {$row["pdesc"]} <br> ".
-	        "Product Wholesale Price: {$row["pwholesale"]} <br> ".
-         	"Product Selling Price: {$row["pselling"]} <br> ".
-		"Product Stock: {$row["pstock"]} <br> ".
-         	"------------------<br>";
-    	
+    		print "<tr> <td>";
+			echo  $row["pid"];
+			print "</td> <td>";
+			echo  $row["pname"];
+			print "</td> <td>";
+			echo $row["pdesc"];
+			print "</td> <td>";
+			echo $row["pwholesale"];
+			print "</td> <td>";
+			echo $row["pselling"];
+			print "</td> <td>";
+			echo $row["pstock"];
+			print "</td> </tr>";    	
 	}
-	
+	echo '</tbody> </table>';
 	}
 	else
 	{

@@ -53,13 +53,27 @@
   	
   	if ($result->num_rows > 0) 
   	{
-  	
+		echo '<table border="1">
+			<thead>
+				<tr>
+					<th>Order ID</th>
+					<th>Product ID</th>
+					<th>Order Quantity</th>
+				</tr>
+			</thead>
+			<tbody>';
     	while($row = $result->fetch_assoc()) 
     	{
-    	
-    		echo "Order ID :{$row["oid"]}  <br> "."Product ID: {$row["pid"]} <br> "."Order Quantity: {$row["oquantity"]} <br> "."------------------<br>";
+			print "<tr> <td>";
+			echo  $row["oid"];
+			print "</td> <td>";
+			echo  $row["pid"];
+			print "</td> <td>";
+			echo $row["oquantity"];
+			print "</td> </tr>";
+ 
     	}
-    		
+    	echo '</tbody> </table>';	
    	}
 	else
 	{

@@ -50,20 +50,33 @@
 
 	if (mysqli_num_rows($result) > 0)
 	{
-  		
+  		echo '<table border="1">
+			<thead>
+				<tr>
+					<th>Customer ID</th>
+					<th>Name</th>
+					<th>Gender</th>
+					<th>Age</th>
+					<th>Phone</th>
+				</tr>
+			</thead>
+			<tbody>';
     	while($row = mysqli_fetch_assoc($result)) 
     	{
-    	
-    		
-   		echo "ID :{$row["cid"]}  <br> ".
-         	"Name: {$row["cname"]} <br> ".
-         	"Gender: {$row["cgender"]} <br> ".
-	        "Age: {$row["cage"]} <br> ".
-         	"Phone: {$row["cphone"]} <br> ".
-         	"------------------<br>";
+			print "<tr> <td>";
+			echo  $row["cid"];
+    		print "</td> <td>";
+			echo $row["cname"];
+			print "</td> <td>";
+			echo $row["cgender"];
+			print "</td> <td>";
+			echo $row["cage"];
+			print "</td> <td>";
+			echo $row["cphone"];
+			print "</td> </tr>";
     	
 	}
-	
+	echo '</tbody> </table>';
 	}
 	else
 	{
